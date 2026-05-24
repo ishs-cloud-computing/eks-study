@@ -4,6 +4,10 @@ WORKDIR /workspace
 COPY go.work ./
 COPY shared/ shared/
 COPY user-service/ user-service/
+RUN go work edit -dropuse=./frontend && \
+    go work edit -dropuse=./notification-service && \
+    go work edit -dropuse=./order-service && \
+    go work edit -dropuse=./payment-service
 RUN cd user-service && \
     CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/user-service .
 
