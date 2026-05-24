@@ -4,6 +4,10 @@ WORKDIR /workspace
 COPY go.work ./
 COPY shared/ shared/
 COPY notification-service/ notification-service/
+RUN go work edit -dropuse=./frontend && \
+    go work edit -dropuse=./order-service && \
+    go work edit -dropuse=./payment-service && \
+    go work edit -dropuse=./user-service
 RUN cd notification-service && \
     CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/notification-service .
 
