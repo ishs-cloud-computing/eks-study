@@ -4,7 +4,7 @@ WORKDIR /workspace
 COPY go.work ./
 COPY shared/ shared/
 COPY order-service/ order-service/
-RUN RUN go work edit -dropuse=./frontend && \
+RUN go work edit -dropuse=./frontend && \
     go work edit -dropuse=./notification-service && \
     go work edit -dropuse=./payment-service && \
     go work edit -dropuse=./user-service
