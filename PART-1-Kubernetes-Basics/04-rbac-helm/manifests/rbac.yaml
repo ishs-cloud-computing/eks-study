@@ -36,5 +36,5 @@ spec:
   serviceAccountName: pod-reader-sa
   containers:
     - name: kubectl
-      image: bitnami/kubectl:1.30
+      image: bitnami/kubectl:latest
       command: ["sh", "-c", "sleep 3600"]
