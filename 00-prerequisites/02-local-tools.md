@@ -30,10 +30,6 @@ Docker Desktop 실행 후 메뉴바에 고래 아이콘이 떠야 합니다.
 ## Linux (Amazon Linux 2023 기반)
 
 ```bash
-# AWS CLI v2 (Amazon Linux 2023은 기본 제공)
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
-unzip -q /tmp/awscliv2.zip -d /tmp && sudo /tmp/aws/install
-
 # kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
