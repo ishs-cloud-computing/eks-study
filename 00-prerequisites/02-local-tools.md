@@ -2,19 +2,19 @@
 
 ## 필요 도구 목록
 
-| 도구 | 용도 | 최소 버전 |
-|------|------|----------|
-| `aws` | AWS CLI v2 — AWS API 호출 | 2.15+ |
-| `kubectl` | Kubernetes API 클라이언트 | 1.29+ |
-| `eksctl` | EKS 클러스터 생성/관리 | 0.170+ |
-| `helm` | K8s 패키지 매니저 | 3.14+ |
-| `terraform` | IaC 도구 (Part 3 후반) | 1.7+ |
-| `go` | 시나리오 앱 빌드 | 1.22+ |
-| `docker` | 컨테이너 빌드/로컬 실행 | 24+ |
-| `k9s` | TUI 기반 K8s 대시보드 | 0.32+ |
-| `stern` | 멀티-Pod 로그 tail | 1.30+ |
-| `jq`, `yq` | JSON/YAML CLI 가공 | 최신 |
-| `protoc` | gRPC 코드 생성 (Task 6) | 26+ |
+| 도구        | 용도                      | 최소 버전 |
+| ----------- | ------------------------- | --------- |
+| `aws`       | AWS CLI v2 — AWS API 호출 | 2.15+     |
+| `kubectl`   | Kubernetes API 클라이언트 | 1.29+     |
+| `eksctl`    | EKS 클러스터 생성/관리    | 0.170+    |
+| `helm`      | K8s 패키지 매니저         | 3.14+     |
+| `terraform` | IaC 도구 (Part 3 후반)    | 1.7+      |
+| `go`        | 시나리오 앱 빌드          | 1.22+     |
+| `docker`    | 컨테이너 빌드/로컬 실행   | 24+       |
+| `k9s`       | TUI 기반 K8s 대시보드     | 0.32+     |
+| `stern`     | 멀티-Pod 로그 tail        | 1.30+     |
+| `jq`, `yq`  | JSON/YAML CLI 가공        | 최신      |
+| `protoc`    | gRPC 코드 생성 (Task 6)   | 26+       |
 
 ## macOS (Homebrew)
 
@@ -26,6 +26,38 @@ brew install --cask docker
 ```
 
 Docker Desktop 실행 후 메뉴바에 고래 아이콘이 떠야 합니다.
+
+## Linux (Amazon Linux 2023 기반)
+
+```bash
+# AWS CLI v2 (Amazon Linux 2023은 기본 제공)
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o /tmp/awscliv2.zip
+unzip -q /tmp/awscliv2.zip -d /tmp && sudo /tmp/aws/install
+
+# kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# eksctl
+ARCH=amd64 # for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+PLATFORM=$(uname -s)_$ARCH
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz"
+tar -xzf eksctl_$PLATFORM.tar.gz -C /tmp && rm eksctl_$PLATFORM.tar.gz
+sudo install -m 0755 /tmp/eksctl /usr/local/bin && rm /tmp/eksctl
+
+# helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+chmod 700 get_helm.sh
+./get_helm.sh
+
+# terraform
+sudo yum install -y yum-utils shadow-utils
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+sudo yum install terraform
+
+# etc
+sudo dnf upgrade -y && sudo dnf install docker yq jq goalng -y
+```
 
 ## Linux (apt 기반)
 
@@ -75,6 +107,7 @@ yq --version
 ```
 
 또는 자동 점검:
+
 ```bash
 bash scripts/check-tools.sh
 ```
@@ -93,11 +126,11 @@ source ~/.zshrc
 
 ## 트러블슈팅
 
-| 증상 | 해결 |
-|------|------|
-| `command not found: kubectl` | PATH에 `/usr/local/bin` 포함 확인 |
-| `docker: Cannot connect to the Docker daemon` | Docker Desktop 미실행. 실행 후 재시도 |
-| `eksctl version` 너무 오래됨 | `brew upgrade eksctl` 또는 GitHub release 재설치 |
+| 증상                                          | 해결                                             |
+| --------------------------------------------- | ------------------------------------------------ |
+| `command not found: kubectl`                  | PATH에 `/usr/local/bin` 포함 확인                |
+| `docker: Cannot connect to the Docker daemon` | Docker Desktop 미실행. 실행 후 재시도            |
+| `eksctl version` 너무 오래됨                  | `brew upgrade eksctl` 또는 GitHub release 재설치 |
 
 ## 다음 단계
 
