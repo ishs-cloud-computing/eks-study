@@ -105,10 +105,10 @@ addons:
 
 - 신규 마이너 버전이 약 분기마다 출시
 - 각 버전은 **약 14개월 지원** (Standard) → 만료되기 전 업그레이드
-- 학습용은 항상 최신 또는 N-1 권장 (1.30 또는 1.31)
+- 학습용은 항상 최신 또는 N-1 권장 (1.34 또는 1.35)
 
 ```bash
-eksctl utils describe-addon-versions --kubernetes-version 1.30
+eksctl utils describe-addon-versions --kubernetes-version 1.35
 ```
 
 ## 6. 인증 (Auth) — IAM ↔ K8s RBAC
