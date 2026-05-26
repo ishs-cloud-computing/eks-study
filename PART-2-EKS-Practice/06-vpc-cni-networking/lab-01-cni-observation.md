@@ -39,6 +39,7 @@ kubectl describe ds aws-node -n kube-system | grep -A30 'Environment:' | head -4
 ```
 
 기대 환경변수 (주요):
+
 ```
 WARM_ENI_TARGET=1
 WARM_IP_TARGET=...
@@ -48,11 +49,12 @@ ENABLE_PREFIX_DELEGATION=false
 
 ## 4. Pod 한계 시뮬레이션
 
-t3.medium 기준 노드별 Pod 최대치는 약 17 (시스템 Pod 포함, prefix delegation 없음).
+t3.medium 기준 노드별 Pod 최대치는 약 17 (시스템 Pod 포함, prefix delegation
+없음).
 
 ```bash
 # Deployment를 조금씩 늘리면서 확인
-kubectl create deploy stress --image=pause:3.9 --replicas=15
+kubectl create deploy stress --image=registry.k8s.io/pause:3.9 --replicas=15
 kubectl rollout status deploy/stress
 kubectl get pods -l app=stress -o wide | awk '{print $7}' | sort | uniq -c
 # → 노드별 Pod 분포
@@ -67,6 +69,7 @@ kubectl get pods -l app=stress | grep -c Pending
 기대: 일정 수에서 Pending 발생 (`FailedScheduling: too many pods` 또는 IP 부족).
 
 확인:
+
 ```bash
 kubectl describe pod $(kubectl get pods -l app=stress --field-selector status.phase=Pending -o name | head -1) | tail -10
 ```
@@ -89,6 +92,7 @@ kubectl rollout status ds/aws-node -n kube-system
 이제 Pod 한계가 훨씬 커집니다 (이론적으로 t3.medium ~110 Pod).
 
 원복:
+
 ```bash
 kubectl set env ds/aws-node -n kube-system ENABLE_PREFIX_DELEGATION=false
 kubectl rollout restart ds/aws-node -n kube-system
