@@ -1,0 +1,50 @@
+name: 🔧 Lab Error
+description: Manifest apply 오류, 명령어 실행 실패 등 실습이 재현되지 않는 경우
+labels: ["lab-error", "needs-review"]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: 해당 PART
+      options: [PART-1, PART-2, PART-3, PART-4, PART-5]
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: 파일 경로
+      placeholder: "PART-2/module-05-lab.md"
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: 실습 환경
+      placeholder: "EKS 1.30 / 로컬 kind v0.23"
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: 실행한 명령어 / manifest
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: 오류 메시지
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대했던 동작
+    validations:
+      required: true
+  - type: textarea
+    id: additional
+    attributes:
+      label: 추가 정보
+      description: 시도해본 것, 참고 링크 등

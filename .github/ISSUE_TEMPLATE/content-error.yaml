@@ -1,0 +1,35 @@
+name: ✏️ Content Error
+description: 오탈자, 잘못된 설명, 틀린 개념 등 문서 자체의 오류
+labels: ["content-error", "needs-review"]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: 해당 PART
+      options: [PART-1, PART-2, PART-3, PART-4, PART-5]
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: 파일 경로
+      placeholder: "PART-1/module-02-theory.md"
+    validations:
+      required: true
+  - type: textarea
+    id: current-content
+    attributes:
+      label: 현재 문서 내용 (문제 부분)
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: correct-content
+    attributes:
+      label: 올바른 내용
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: 근거 또는 참고 링크
