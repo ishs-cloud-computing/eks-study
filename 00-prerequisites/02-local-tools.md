@@ -53,7 +53,7 @@ sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinu
 sudo yum install terraform
 
 # etc
-sudo dnf upgrade -y && sudo dnf install docker yq jq goalng -y
+sudo dnf upgrade -y && sudo dnf install docker yq jq golang -y
 ```
 
 ## Linux (apt 기반)
