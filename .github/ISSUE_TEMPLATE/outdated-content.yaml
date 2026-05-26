@@ -1,4 +1,5 @@
 name: 📌 Outdated Content
+title: "[PART-] module-: "
 description: K8s/EKS 버전 업데이트로 내용이 구버전이 된 경우
 labels: ["outdated", "needs-review"]
 body:
