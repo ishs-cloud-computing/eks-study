@@ -1,4 +1,5 @@
 name: ✏️ Content Error
+title: "[PART-] module-: "
 description: 오탈자, 잘못된 설명, 틀린 개념 등 문서 자체의 오류
 labels: ["content-error", "needs-review"]
 body:

@@ -1,0 +1,42 @@
+name: 📌 Outdated Content
+title: "[PART-] module-: "
+description: K8s/EKS 버전 업데이트로 내용이 구버전이 된 경우
+labels: ["outdated", "needs-review"]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: 해당 PART
+      options: [PART-1, PART-2, PART-3, PART-4, PART-5]
+    validations:
+      required: true
+  - type: input
+    id: file
+    attributes:
+      label: 파일 경로
+      placeholder: "PART-2/module-05-lab.md"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 문제가 되는 버전
+      placeholder: "k8s 1.30+ / EKS 1.29"
+    validations:
+      required: true
+  - type: textarea
+    id: what-changed
+    attributes:
+      label: 변경된 내용
+      description: 어떤 API/동작/리소스가 바뀌었는지
+    validations:
+      required: true
+  - type: textarea
+    id: current-content
+    attributes:
+      label: 현재 문서 내용 (문제 부분)
+      render: markdown
+  - type: textarea
+    id: correct-content
+    attributes:
+      label: 올바른 내용 또는 참고 링크

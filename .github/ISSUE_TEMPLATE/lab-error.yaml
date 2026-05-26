@@ -1,4 +1,5 @@
 name: 🔧 Lab Error
+title: "[PART-] module-: "
 description: Manifest apply 오류, 명령어 실행 실패 등 실습이 재현되지 않는 경우
 labels: ["lab-error", "needs-review"]
 body:
