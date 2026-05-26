@@ -1,0 +1,36 @@
+name: 💡 New Content
+description: 새 모듈, 섹션, 실습 추가 제안
+labels: ["new-content", "discussion"]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: 추가할 PART
+      options: [PART-1, PART-2, PART-3, PART-4, PART-5, 미정]
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: 콘텐츠 유형
+      options: [이론, Lab, Pitfalls, 기타]
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: 제안 제목
+      placeholder: "EKS Pod Identity 실습 추가"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: 제안 내용
+      description: 어떤 내용을 다뤄야 하는지, 왜 필요한지
+    validations:
+      required: true
+  - type: textarea
+    id: reference
+    attributes:
+      label: 참고 링크
