@@ -18,8 +18,8 @@ func main() {
 	r := gin.New()
 	r.Use(gin.Recovery())
 	h := handler.New()
-	r.POST("/orders", h.Create)
-	r.GET("/orders/:id", h.Get)
+	r.POST("/api/orders", h.Create)
+	r.GET("/api/orders/:id", h.Get)
 	r.GET("/healthz", func(c *gin.Context) { c.Status(http.StatusOK) })
 
 	go func() {
