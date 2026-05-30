@@ -15,6 +15,12 @@ helm repo update
 
 ## 2. 설치
 
+grafana를 위한 gp3 storage 추가:
+
+```bash
+kubectl apply -f manifests/storage.yaml
+```
+
 ```bash
 helm install kps prometheus-community/kube-prometheus-stack \
   -n monitoring --create-namespace \
@@ -22,13 +28,16 @@ helm install kps prometheus-community/kube-prometheus-stack \
   --version 65.x.x        # 본 lab 시점 stable
 ```
 
-> 정확한 버전은 `helm search repo prometheus-community/kube-prometheus-stack -l | head` 로 확인
+> 정확한 버전은
+> `helm search repo prometheus-community/kube-prometheus-stack -l | head` 로
+> 확인
 
 ```bash
 kubectl get pods -n monitoring --watch
 ```
 
 5~7분 후:
+
 ```
 NAME                                                     READY  STATUS
 alertmanager-kps-kube-prometheus-stack-alertmanager-0   2/2    Running
@@ -46,12 +55,14 @@ kubectl get crd | grep monitoring.coreos.com
 ```
 
 기대:
+
 ```
 alertmanagers, podmonitors, probes, prometheuses, prometheusrules,
 servicemonitors, thanosrulers
 ```
 
 자동 생성된 ServiceMonitor 들:
+
 ```bash
 kubectl get servicemonitor -n monitoring
 ```
@@ -63,10 +74,12 @@ kubectl port-forward -n monitoring svc/kps-grafana 3000:80 &
 ```
 
 브라우저: http://localhost:3000
+
 - ID: `admin`
 - PW: `eks-study-admin`
 
-좌측 → Dashboards 메뉴에 자동으로 import 된 대시보드 다수 (`Kubernetes / Compute Resources / *`).
+좌측 → Dashboards 메뉴에 자동으로 import 된 대시보드 다수
+(`Kubernetes / Compute Resources / *`).
 
 ## 5. Prometheus UI
 
@@ -77,6 +90,7 @@ kubectl port-forward -n monitoring svc/kps-kube-prometheus-stack-prometheus 9090
 브라우저: http://localhost:9090
 
 쿼리 시도:
+
 ```
 # 노드 수
 count(kube_node_info)
@@ -93,7 +107,8 @@ ALERTS{alertstate="firing"}
 
 ## 6. ServiceMonitor 직접 만들기 (커스텀 앱 메트릭)
 
-본 커리큘럼의 `order-service` 가 `:9090/metrics` 를 노출함. 그것을 Prometheus가 scrape 하도록:
+본 커리큘럼의 `order-service` 가 `:9090/metrics` 를 노출함. 그것을 Prometheus가
+scrape 하도록:
 
 ```bash
 # (Part 1 미니 프로젝트의 차트 사용. 데모로 임시 배포)
