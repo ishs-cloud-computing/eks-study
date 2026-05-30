@@ -4,7 +4,7 @@ kind: ClusterConfig
 metadata:
   name: eks-study
   region: ap-northeast-2
-  version: "1.30"
+  version: "1.35"
   tags:
     Project: eks-study
     Environment: learning
@@ -15,7 +15,7 @@ iam:
 vpc:
   cidr: 10.20.0.0/16
   nat:
-    gateway: Single        # NAT Gateway 1개 (비용 절감 — 학습용)
+    gateway: Single # NAT Gateway 1개 (비용 절감 — 학습용)
 
 managedNodeGroups:
   - name: workers
@@ -51,5 +51,11 @@ addons:
 
 cloudWatch:
   clusterLogging:
-    enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+    enableTypes: [
+      "api",
+      "audit",
+      "authenticator",
+      "controllerManager",
+      "scheduler",
+    ]
     logRetentionInDays: 7
