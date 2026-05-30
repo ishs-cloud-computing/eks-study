@@ -17,11 +17,13 @@ kubectl get pods -n order --watch
 ```
 
 또는 한 줄:
+
 ```bash
 kubectl apply -f /tmp/msa/
 ```
 
 기대 (몇 분 후):
+
 ```
 NAME                                 READY   STATUS    RESTARTS   AGE
 order-service-xxx-aaa                1/1     Running   0          1m
@@ -34,7 +36,8 @@ frontend-xxx-aaa                     1/1     Running   0          1m
 frontend-xxx-bbb                     1/1     Running   0          1m
 ```
 
-> notification-service 는 Kafka 가 없어서 실패하는 게 **정상**. Part 3 모듈 13에서 Kafka 를 띄우면 정상 동작.
+> notification-service 는 Kafka 가 없어서 실패하는 게 **정상**. Part 3 모듈
+> 13에서 Kafka 를 띄우면 정상 동작.
 
 ## 2. Service 확인
 
@@ -43,6 +46,7 @@ kubectl get svc -n order
 ```
 
 기대:
+
 ```
 NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)
 frontend               ClusterIP   10.100.x.y      <none>        80/TCP
@@ -59,6 +63,7 @@ kubectl get ingress -n order msa --watch
 ```
 
 ADDRESS가 채워질 때까지 1~2분 대기:
+
 ```
 NAME   CLASS   HOSTS   ADDRESS                                                     PORTS
 msa    alb     *       k8s-eksstudy-xxxxxx.ap-northeast-2.elb.amazonaws.com        80
@@ -88,7 +93,7 @@ curl -s http://$ALB_DNS/api/orders/$ID | jq
 ## 5. 클러스터 내부 통신 (gRPC) 확인
 
 ```bash
-kubectl run -it --rm grpc-test --image=fullstorydev/grpcurl:v1.9.0-buster \
+kubectl run -it --rm grpc-test --image=fullstorydev/grpcurl:v1.9.3-alpine \
   -n order \
   --command -- /bin/grpcurl -plaintext \
   -d '{"name":"finn","email":"f@x.io"}' \
@@ -119,7 +124,8 @@ curl -sG http://localhost:9090/api/v1/query \
   --data-urlencode 'query=up{namespace="order"}' | jq '.data.result'
 ```
 
-기대: 모든 서비스의 `up=1` (notification-service는 healthz 가 200 이라 up=1 일 수도, 실제 로직은 Kafka 안 붙어 다운).
+기대: 모든 서비스의 `up=1` (notification-service는 healthz 가 200 이라 up=1 일
+수도, 실제 로직은 Kafka 안 붙어 다운).
 
 ## 학습 확인 질문
 
