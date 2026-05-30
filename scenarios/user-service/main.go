@@ -10,6 +10,7 @@ import (
 	"github.com/finn/eks-study/shared/logger"
 	"github.com/finn/eks-study/shared/metrics"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -23,6 +24,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterUserServiceServer(s, server.New())
+	reflection.Register(s)
 
 	go func() {
 		mux := http.NewServeMux()
