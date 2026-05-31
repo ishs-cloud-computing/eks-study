@@ -24,6 +24,7 @@ kubectl get ingress echo --watch
 ```
 
 처음에는 `ADDRESS` 가 비어있다가 약 1~2분 후 ALB DNS로 채워짐:
+
 ```
 NAME   CLASS   HOSTS   ADDRESS                                                            PORTS
 echo   alb     *       k8s-default-echo-xxxxxxxxxx.ap-northeast-2.elb.amazonaws.com       80
@@ -56,6 +57,7 @@ aws elbv2 describe-target-health --target-group-arn $TG_ARN \
 ```
 
 기대:
+
 ```
 +----------------+------+---------+
 | 10.20.x.y      | 80   | healthy |
@@ -72,12 +74,13 @@ ALB_DNS=$(kubectl get ingress echo -o jsonpath='{.status.loadBalancer.ingress[0]
 echo "ALB DNS: $ALB_DNS"
 
 curl -s http://$ALB_DNS/ | jq .host       # echo-server는 요청 정보를 JSON 으로 반환
-curl -s http://$ALB_DNS/foo/bar | jq '.path,.headers'
+curl -s http://$ALB_DNS/foo/bar | jq '.http.originalUrl, .request.headers'
 ```
 
 ## 5. path 라우팅 시연
 
 매니페스트 수정:
+
 ```bash
 cat > /tmp/echo-paths.yaml <<'EOF'
 apiVersion: networking.k8s.io/v1
@@ -110,8 +113,8 @@ EOF
 kubectl apply -f /tmp/echo-paths.yaml
 
 # 재호출
-curl -s http://$ALB_DNS/api/orders | jq .path
-curl -s http://$ALB_DNS/health | jq .path
+curl -s http://$ALB_DNS/api/orders | jq '.http.originalUrl'
+curl -s http://$ALB_DNS/health | jq '.http.originalUrl'
 ```
 
 ## 6. ALB 삭제 확인
