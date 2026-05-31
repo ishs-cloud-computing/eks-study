@@ -13,6 +13,7 @@ kubectl get sa -n kube-system ebs-csi-controller-sa -o yaml | yq '.metadata.anno
 ```
 
 기대:
+
 ```yaml
 eks.amazonaws.com/role-arn: arn:aws:iam::123456789012:role/AmazonEKS_EBS_CSI_DriverRole
 ```
@@ -31,11 +32,14 @@ aws iam get-role --role-name $ROLE_NAME --query 'Role.AssumeRolePolicyDocument' 
 ```
 
 기대:
+
 ```json
 {
   "Statement": [{
     "Effect": "Allow",
-    "Principal": {"Federated": "arn:aws:iam::123456789012:oidc-provider/oidc.eks..."},
+    "Principal": {
+      "Federated": "arn:aws:iam::123456789012:oidc-provider/oidc.eks..."
+    },
     "Action": "sts:AssumeRoleWithWebIdentity",
     "Condition": {
       "StringEquals": {
@@ -49,11 +53,12 @@ aws iam get-role --role-name $ROLE_NAME --query 'Role.AssumeRolePolicyDocument' 
 ## 3. Pod 안에서 토큰 확인
 
 ```bash
-POD=$(kubectl get pods -n kube-system -l app=ebs-csi-controller -o name | head -1)
-kubectl exec -n kube-system $POD -c ebs-plugin -- env | grep AWS
+POD=$(kubectl get pods -n kube-system -l app=ebs-csi-controller -o jsonpath='{.items[0].metadata.name}')
+kubectl describe pod -n kube-system $POD | grep -A 30 "Environment:"
 ```
 
 기대:
+
 ```
 AWS_DEFAULT_REGION=ap-northeast-2
 AWS_REGION=ap-northeast-2
@@ -67,14 +72,24 @@ kubectl exec -n kube-system $POD -c ebs-plugin -- \
 echo
 ```
 
+> ⛔ 의도대로 작동하지 않는 코드\
+> [issue #34](https://github.com/ishs-cloud-computing/eks-study/issues/34)를
+> 확인해주세요.
+
 JWT 형식. 디코딩하려면:
+
 ```bash
 kubectl exec -n kube-system $POD -c ebs-plugin -- \
   cat /var/run/secrets/eks.amazonaws.com/serviceaccount/token \
   | awk -F. '{print $2}' | base64 -d 2>/dev/null
 ```
 
+> ⛔ 의도대로 작동하지 않는 코드\
+> [issue #34](https://github.com/ishs-cloud-computing/eks-study/issues/34)를
+> 확인해주세요.
+
 기대 (필드들):
+
 ```json
 {
   "aud": ["sts.amazonaws.com"],
@@ -129,6 +144,7 @@ kubectl get pvc test-irsa-pvc --watch    # Bound 까지 기다림 (몇 초)
 ```
 
 EBS CSI Controller 의 로그에서 IRSA 로 EBS API 호출하는 것 확인:
+
 ```bash
 kubectl logs -n kube-system -l app=ebs-csi-controller -c ebs-plugin --tail=20 \
   | grep -i 'createvolume\|volumeID'
