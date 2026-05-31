@@ -14,6 +14,7 @@ kubectl get nodes -L workload-type
 ```
 
 기대:
+
 ```
 NAME      WORKLOAD-TYPE
 ip-10-20-x-x   general
@@ -34,6 +35,7 @@ kubectl get pod pinned -o wide
 ```
 
 매칭되는 노드에 떠 있는지 확인 후 정리:
+
 ```bash
 kubectl delete pod pinned
 ```
@@ -51,7 +53,7 @@ metadata:
 
 managedNodeGroups:
   - name: cpu-workers
-    instanceTypes: [c6a.large, c6i.large]
+    instanceTypes: [c6i.large]
     spot: true
     desiredCapacity: 1
     minSize: 0
@@ -121,6 +123,7 @@ kubectl get nodes -L workload-type
 기대: general 노드 3개로 증가.
 
 다시:
+
 ```bash
 eksctl scale nodegroup --cluster eks-study --name workers --nodes 2
 ```
@@ -135,6 +138,7 @@ eksctl delete nodegroup --cluster eks-study --name cpu-workers --region ap-north
 
 1. 노드 그룹별 IAM Role 이 분리되는 이유는? (보안 관점)
 2. `spot: true` 인 노드 그룹의 Pod이 갑자기 종료될 때 어떻게 대응할 수 있을까?
-3. taint와 toleration 만으로 Pod 배치를 강제할 수 있을까? nodeSelector도 같이 써야 하나?
+3. taint와 toleration 만으로 Pod 배치를 강제할 수 있을까? nodeSelector도 같이
+   써야 하나?
 
 다음: [lab-03-addons.md](./lab-03-addons.md)
