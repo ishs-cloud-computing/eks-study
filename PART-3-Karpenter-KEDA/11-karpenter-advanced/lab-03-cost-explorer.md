@@ -27,6 +27,7 @@ done
 ```
 
 기대 (예시):
+
 ```
 c5a.large (ap-northeast-2a): $0.0260/hour (Spot)
 m6a.large (ap-northeast-2b): $0.0312/hour (Spot)
@@ -48,17 +49,29 @@ done
 ```
 
 ap-northeast-2 의 일반적 시간당 가격 (참고):
-| Type | On-Demand | Spot | 절감 |
-|------|-----------|------|------|
-| t3.medium | $0.052 | ~$0.016 | 69% |
-| c5.large | $0.10 | ~$0.030 | 70% |
-| m5.large | $0.118 | ~$0.038 | 68% |
-| m6a.large | $0.107 | ~$0.032 | 70% |
+
+| Type      | On-Demand | Spot    | 절감 |
+| --------- | --------- | ------- | ---- |
+| t3.medium | $0.052    | ~$0.016 | 69%  |
+| c5.large  | $0.10     | ~$0.030 | 70%  |
+| m5.large  | $0.118    | ~$0.038 | 68%  |
+| m6a.large | $0.107    | ~$0.032 | 70%  |
 
 ## 3. Cost Explorer API
 
 지난 24시간 EC2 비용:
+
 ```bash
+# Linux
+aws ce get-cost-and-usage \
+  --time-period Start=$(date -u -d "24 hours ago" +%Y-%m-%dT%H:00:00Z),End=$(date -u +%Y-%m-%dT%H:00:00Z) \
+  --granularity HOURLY \
+  --metrics UnblendedCost \
+  --filter '{"Dimensions":{"Key":"SERVICE","Values":["Amazon Elastic Compute Cloud - Compute"]}}' \
+  --query 'ResultsByTime[*].[TimePeriod.Start,Total.UnblendedCost.Amount]' \
+  --output text | tail -24
+
+# macOS/FreeBSD
 aws ce get-cost-and-usage \
   --time-period Start=$(date -u -v-1d +%F),End=$(date -u +%F) \
   --granularity HOURLY \
@@ -68,11 +81,13 @@ aws ce get-cost-and-usage \
   --output text | tail -10
 ```
 
-> 학습 시작 후 24시간 이내라면 데이터가 부족할 수 있음. AWS Console 의 Cost Explorer UI 가 시각화에 좋음.
+> 학습 시작 후 24시간 이내라면 데이터가 부족할 수 있음. AWS Console 의 Cost
+> Explorer UI 가 시각화에 좋음.
 
 ## 4. EC2 인스턴스 사용 시간 분석
 
 Karpenter 가 만들고 종료한 인스턴스들의 lifetime:
+
 ```bash
 aws ec2 describe-instances \
   --filters "Name=tag:karpenter.sh/nodepool,Values=spot,ondemand" \
@@ -87,18 +102,19 @@ aws ec2 describe-instances \
 (Module 08 에서 설치한 Container Insights 가 떠 있다면)
 
 CloudWatch → Container Insights → eks-study → Performance.
+
 - Node CPU/Memory utilization
 - Pod 별 사용량 vs Request 비율 → over-provision 인 워크로드 식별
 
 ## 6. 비용 절감 체크리스트
 
-| 항목 | 효과 |
-|------|------|
-| Spot 우선 + 다양화 | 60~70% 절감 |
-| Consolidation 활성 | underutilized 노드 자동 회수 |
-| 인스턴스 타입 제한 (큰 거 배제) | over-provisioning 방지 |
-| 적절한 requests / limits | Karpenter 가 정확히 sizing |
-| 야간/주말 자동 스케일 다운 | KEDA cron trigger (Module 12) |
+| 항목                            | 효과                          |
+| ------------------------------- | ----------------------------- |
+| Spot 우선 + 다양화              | 60~70% 절감                   |
+| Consolidation 활성              | underutilized 노드 자동 회수  |
+| 인스턴스 타입 제한 (큰 거 배제) | over-provisioning 방지        |
+| 적절한 requests / limits        | Karpenter 가 정확히 sizing    |
+| 야간/주말 자동 스케일 다운      | KEDA cron trigger (Module 12) |
 
 ## 학습 확인 질문
 
