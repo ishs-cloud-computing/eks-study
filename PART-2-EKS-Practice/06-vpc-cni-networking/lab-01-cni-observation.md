@@ -18,7 +18,7 @@ INSTANCE_ID=$(aws ec2 describe-instances \
 # 노드의 ENI들
 aws ec2 describe-network-interfaces \
   --filters "Name=attachment.instance-id,Values=$INSTANCE_ID" \
-  --query 'NetworkInterfaces[].[NetworkInterfaceId,PrivateIpAddress,PrivateIpAddresses[*].PrivateIpAddress]' \
+  --query 'NetworkInterfaces[].[NetworkInterfaceId, PrivateIpAddress, join(`, `, PrivateIpAddresses[*].PrivateIpAddress)]' \
   --output table
 ```
 
