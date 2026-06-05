@@ -61,8 +61,10 @@ ap-northeast-2 의 일반적 시간당 가격 (참고):
 
 지난 24시간 EC2 비용:
 
+시간별 세분화 수준 활성화 시
+
 ```bash
-# Linux
+# Linux 
 aws ce get-cost-and-usage \
   --time-period Start=$(date -u -d "24 hours ago" +%Y-%m-%dT%H:00:00Z),End=$(date -u +%Y-%m-%dT%H:00:00Z) \
   --granularity HOURLY \
@@ -71,7 +73,7 @@ aws ce get-cost-and-usage \
   --query 'ResultsByTime[*].[TimePeriod.Start,Total.UnblendedCost.Amount]' \
   --output text | tail -24
 
-# macOS/FreeBSD
+# macOS / FreeBSD
 aws ce get-cost-and-usage \
   --time-period Start=$(date -u -v-1d +%F),End=$(date -u +%F) \
   --granularity HOURLY \
@@ -79,6 +81,30 @@ aws ce get-cost-and-usage \
   --filter '{"Dimensions":{"Key":"SERVICE","Values":["Amazon Elastic Compute Cloud - Compute"]}}' \
   --query 'ResultsByTime[*].[TimePeriod.Start,Total.UnblendedCost.Amount]' \
   --output text | tail -10
+```
+
+시간별 세분화 비활성화 시(기본 값)
+
+> 당일 사용량은 익일 적용됩니다.
+
+```bash
+# Linux
+aws ce get-cost-and-usage \
+  --time-period Start=$(date -u +%Y-%m-%d),End=$(date -u -d "tomorrow" +%Y-%m-%d) \
+  --granularity DAILY \
+  --metrics UnblendedCost \
+  --filter '{"Dimensions":{"Key":"SERVICE","Values":["Amazon Elastic Compute Cloud - Compute"]}}' \
+  --query 'ResultsByTime[*].[TimePeriod.Start,Total.UnblendedCost.Amount]' \
+  --output text
+  
+# macOS / FreeBSD
+aws ce get-cost-and-usage \
+  --time-period Start=$(date -u +%Y-%m-%d),End=$(date -u -v+1d +%Y-%m-%d) \
+  --granularity DAILY \
+  --metrics UnblendedCost \
+  --filter '{"Dimensions":{"Key":"SERVICE","Values":["Amazon Elastic Compute Cloud - Compute"]}}' \
+  --query 'ResultsByTime[*].[TimePeriod.Start,Total.UnblendedCost.Amount]' \
+  --output text
 ```
 
 > 학습 시작 후 24시간 이내라면 데이터가 부족할 수 있음. AWS Console 의 Cost
