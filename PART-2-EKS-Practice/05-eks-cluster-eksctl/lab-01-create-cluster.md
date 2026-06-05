@@ -2,7 +2,8 @@
 
 ## ⚠️ 비용 시작
 
-이 lab부터 EKS Control Plane 비용($0.10/시간)이 발생합니다. Part 2 끝나면 반드시 클러스터 삭제.
+이 lab부터 EKS Control Plane 비용($0.10/시간)이 발생합니다. Part 2 끝나면 반드시
+클러스터 삭제.
 
 ## 학습 확인 포인트
 
@@ -21,10 +22,13 @@ eksctl delete cluster --name eks-study --region ap-northeast-2 --wait
 ## 2. ClusterConfig 검토
 
 ```bash
-cat manifests/cluster.yaml
+vi manifests/cluster.yaml
 ```
 
+`metadata`의 `- version:` 수정
+
 핵심 포인트:
+
 - `iam.withOIDC: true` — IRSA 활성화
 - `vpc.nat.gateway: Single` — NAT Gateway 1개로 비용 절감
 - `managedNodeGroups.spot: true` — Spot 인스턴스
@@ -39,6 +43,7 @@ eksctl create cluster -f manifests/cluster.yaml
 소요 시간: **15 ~ 20분**.
 
 별도 터미널에서 진행 상황 모니터:
+
 ```bash
 watch -n10 'aws cloudformation list-stacks \
   --query "StackSummaries[?starts_with(StackName,\`eksctl-eks-study\`)].[StackName,StackStatus]" \
@@ -63,6 +68,7 @@ kubectl get pods -A
 ```
 
 기대:
+
 ```
 NAME                                              STATUS   ROLES    AGE   VERSION
 ip-10-20-x-x.ap-northeast-2.compute.internal     Ready    <none>   2m    v1.30.x
@@ -85,11 +91,13 @@ aws eks describe-cluster --name eks-study --region ap-northeast-2 \
 ```
 
 기대 (URL 형식):
+
 ```
 https://oidc.eks.ap-northeast-2.amazonaws.com/id/AAABBBCCC...
 ```
 
 IAM Identity Provider 등록 확인:
+
 ```bash
 ISSUER_HOSTPATH=$(aws eks describe-cluster --name eks-study --region ap-northeast-2 \
   --query 'cluster.identity.oidc.issuer' --output text | sed 's|https://||')
@@ -110,6 +118,7 @@ aws cloudformation describe-stack-resources \
 ```
 
 생성된 자원 종류:
+
 - `AWS::EC2::VPC`, `Subnet`, `RouteTable`, `NatGateway`, `InternetGateway`
 - `AWS::EKS::Cluster`
 - `AWS::IAM::Role` (Cluster Role + Service Role)
@@ -125,6 +134,7 @@ aws cloudformation describe-stack-resources \
 ## 7. CloudWatch Logs 확인
 
 ClusterConfig에서 `clusterLogging` 활성화했으므로:
+
 ```bash
 aws logs describe-log-streams \
   --log-group-name /aws/eks/eks-study/cluster \
@@ -140,6 +150,7 @@ aws logs tail /aws/eks/eks-study/cluster --follow --since 5m | head -20
 ## 8. (선택) Access Entry 추가
 
 다른 IAM 사용자가 이 클러스터를 쓰게 하려면:
+
 ```bash
 ARN=arn:aws:iam::123456789012:user/colleague
 aws eks create-access-entry --cluster-name eks-study --principal-arn $ARN
