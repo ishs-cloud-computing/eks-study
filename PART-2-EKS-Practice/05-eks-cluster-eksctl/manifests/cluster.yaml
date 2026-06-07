@@ -7,7 +7,7 @@ autoModeConfig:
 metadata:
   name: eks-study
   region: ap-northeast-2
-  version: "1.35"
+  version: <cluster-version>
   tags:
     Project: eks-study
     Environment: learning
@@ -46,6 +46,8 @@ addons:
   - name: coredns
     version: latest
   - name: kube-proxy
+    version: latest
+  - name: eks-pod-identity-agent
     version: latest
   - name: aws-ebs-csi-driver
     version: latest
