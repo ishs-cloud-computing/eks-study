@@ -60,6 +60,15 @@ kubectl logs -n karpenter -l app.kubernetes.io/name=karpenter --tail=50 \
 
 또는 가격 API 직접:
 ```bash
+# Linux
+aws ec2 describe-spot-price-history \
+  --instance-types c5.large c5a.large m5.large m6a.large \
+  --product-descriptions "Linux/UNIX" \
+  --start-time $(date -u -d '1 hour ago' +%FT%TZ) \
+  --query 'SpotPriceHistory[*].[InstanceType,AvailabilityZone,SpotPrice]' \
+  --output table | head -20
+
+# macOS / FreeBSD
 aws ec2 describe-spot-price-history \
   --instance-types c5.large c5a.large m5.large m6a.large \
   --product-descriptions "Linux/UNIX" \
