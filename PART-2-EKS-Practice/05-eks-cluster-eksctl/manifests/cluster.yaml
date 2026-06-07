@@ -7,7 +7,7 @@ autoModeConfig:
 metadata:
   name: eks-study
   region: ap-northeast-2
-  version: "<cluster-version>" # 쌍따옴표로 감싸야 함 
+  version: "<cluster-version>"
   tags:
     Project: eks-study
     Environment: learning
